@@ -1,59 +1,59 @@
 import throttle from 'lodash.throttle';
 
 const refs = {
-    form: document.querySelector('form.feedback-form'),
-    userEmail: document.querySelector('form input'),
-    userMessage: document.querySelector('form textarea'),
+  form: document.querySelector('form.feedback-form'),
+  userEmail: document.querySelector('form input'),
+  userMessage: document.querySelector('form textarea'),
 };
-
 const STORAGE_KEY = 'feedback-form-state';
 let formData = {
-    email: '',
-    message: '',
+  email: '',
+  message: '',
 };
-populateform();
+populateForm();
 refs.userEmail.addEventListener(
-    'input',
-    throttle(() => {
-        formData.email = refs.userEmail.ariaValueMax;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-    }, 500)
+  'input',
+  throttle(() => {
+    formData.email = refs.userEmail.value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, 500)
 );
+
 refs.userMessage.addEventListener(
-    'input',
-    throttle(() => {
-      formData.message = refs.userMessage.value;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-    }, 500)
-  );
-  
-  refs.form.addEventListener('submit', onFormSubmit);
-  function populateForm() {
-    const savedFormData = localStorage.getItem(STORAGE_KEY);
-  
-    if (savedFormData) {
-      const parsedFormData = JSON.parse(savedFormData);
-      formData.email = parsedFormData.email;
-      formData.message = parsedFormData.message;
-      refs.userEmail.value = formData.email;
-      refs.userMessage.value = formData.message;
-    } else {
-      return;
-    }
+  'input',
+  throttle(() => {
+    formData.message = refs.userMessage.value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, 500)
+);
+
+refs.form.addEventListener('submit', onFormSubmit);
+function populateForm() {
+  const savedFormData = localStorage.getItem(STORAGE_KEY);
+
+  if (savedFormData) {
+    const parsedFormData = JSON.parse(savedFormData);
+    formData.email = parsedFormData.email;
+    formData.message = parsedFormData.message;
+    refs.userEmail.value = formData.email;
+    refs.userMessage.value = formData.message;
+  } else {
+    return;
   }
-  
-  function onFormSubmit(event) {
-    event.preventDefault();
-  
-    if (refs.userEmail.value && refs.userMessage.value) {
-      event.currentTarget.reset();
-      console.log(formData);
-      localStorage.removeItem(STORAGE_KEY);
-      formData = {
-        email: '',
-        message: '',
-      };
-    } else {
-      alert('Please make sure all fields are filled!');
-    }
+}
+
+function onFormSubmit(event) {
+  event.preventDefault();
+
+  if (refs.userEmail.value && refs.userMessage.value) {
+    event.currentTarget.reset();
+    console.log(formData);
+    localStorage.removeItem(STORAGE_KEY);
+    formData = {
+      email: '',
+      message: '',
+    };
+  } else {
+    alert('Please make sure all fields are filled!');
   }
+}
