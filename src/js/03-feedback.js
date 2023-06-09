@@ -11,4 +11,49 @@ let formData = {
     email: '',
     message: '',
 };
-
+populateform();
+refs.userEmail.addEventListener(
+    'input',
+    throttle(() => {
+        formData.email = refs.userEmail.ariaValueMax;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }, 500)
+);
+refs.userMessage.addEventListener(
+    'input',
+    throttle(() => {
+      formData.message = refs.userMessage.value;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }, 500)
+  );
+  
+  refs.form.addEventListener('submit', onFormSubmit);
+  function populateForm() {
+    const savedFormData = localStorage.getItem(STORAGE_KEY);
+  
+    if (savedFormData) {
+      const parsedFormData = JSON.parse(savedFormData);
+      formData.email = parsedFormData.email;
+      formData.message = parsedFormData.message;
+      refs.userEmail.value = formData.email;
+      refs.userMessage.value = formData.message;
+    } else {
+      return;
+    }
+  }
+  
+  function onFormSubmit(event) {
+    event.preventDefault();
+  
+    if (refs.userEmail.value && refs.userMessage.value) {
+      event.currentTarget.reset();
+      console.log(formData);
+      localStorage.removeItem(STORAGE_KEY);
+      formData = {
+        email: '',
+        message: '',
+      };
+    } else {
+      alert('Please make sure all fields are filled!');
+    }
+  }
